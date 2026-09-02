@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # 1. HashiCorp Consul (Service Discovery)
+  consul:
+    image: hashicorp/consul:1.18.2
+    container_name: hospital-consul
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    command: "agent -dev -ui -client=0.0.0.0"
+    networks:
+      - hospital-net
+
+  # 2. PostgreSQL (Banco de Dados Relacional Principal)
+  postgres:
+    image: postgres:16-alpine
+    container_name: hospital-postgres
+    environment:
+      POSTGRES_DB: hospital_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - hospital-net
+
+  # 3. Keycloak (Autenticação, Autorização e Gestão de Tokens OAuth2)
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: hospital-keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: adminpassword
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    command: ["start-dev"]
+    depends_on:
+      - postgres
+    networks:
+      - hospital-net
+
+  # 4. RabbitMQ (Comunicação Assíncrona entre Serviços)
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: hospital-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672" # Painel gerencial
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - hospital-net
+
+# 5. Loki (Agregador de Logs - Open Source)
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: hospital-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - hospital-net
+
+  # 6. Grafana (Painel Visual de Observabilidade - Gratuito)
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: hospital-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - loki
+    networks:
+      - hospital-net
+
+volumes:
+  pgdata:
+
+networks:
+  hospital-net:
+    driver: bridge
