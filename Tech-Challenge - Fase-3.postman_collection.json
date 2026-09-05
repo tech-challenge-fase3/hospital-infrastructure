@@ -1,0 +1,215 @@
+{
+  "info": {
+    "_postman_id": "a0064dee-1c2d-4237-bf01-25eb3aeafd79",
+    "name": "Tech-Challenge - Fase-3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1598189"
+  },
+  "item": [
+    {
+      "name": "hospital-scheduling-service",
+      "item": [
+        {
+          "name": "createAppointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"doctorId\": \"987fcdeb-512a-43f7-b234-987654321000\",\n  \"appointmentDate\": \"2026-09-10T14:30:00\",\n  \"notes\": \"Consulta de rotina com cardiologista\"\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8081/scheduling-service/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8081",
+              "path": [
+                "scheduling-service",
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getAllAppointments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8081/scheduling-service/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8081",
+              "path": [
+                "scheduling-service",
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getAppointmentById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8081/scheduling-service/appointments/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8081",
+              "path": [
+                "scheduling-service",
+                "appointments",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "hospital-patient-service",
+      "item": [
+        {
+          "name": "createPatient",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Eber Silva\",\n  \"email\": \"eber.silva@email.com\",\n  \"cpf\": \"123.456.789-00\",\n  \"phone\": \"+5511999999999\",\n  \"birth_date\": \"1980-05-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8082/patient-service/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8082",
+              "path": [
+                "patient-service",
+                "patients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getAllPatients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8082/patient-service/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8082",
+              "path": [
+                "patient-service",
+                "patients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getPatientById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8082/patient-service/patients/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8082",
+              "path": [
+                "patient-service",
+                "patients",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updatePatient",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Eber Silva Atualizado\",\n  \"email\": \"eber.atualizado@email.com\",\n  \"phone\": \"+5511888888888\"\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8082/patient-service/patients/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8082",
+              "path": [
+                "patient-service",
+                "patients",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deletePatient",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": ":{{baseUrl}}8082/patient-service/patients/{id}",
+              "port": "{{baseUrl}}8082",
+              "path": [
+                "patient-service",
+                "patients",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

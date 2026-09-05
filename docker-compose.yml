@@ -12,12 +12,11 @@ services:
     networks:
       - hospital-net
 
-  # 2. PostgreSQL (Banco de Dados Relacional Principal)
+  # 2. PostgreSQL Único (Hospedando os bancos de todos os microsserviços e Keycloak)
   postgres:
     image: postgres:16-alpine
     container_name: hospital-postgres
     environment:
-      POSTGRES_DB: hospital_db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: adminpassword
     ports:
@@ -27,7 +26,7 @@ services:
     networks:
       - hospital-net
 
-  # 3. Keycloak (Autenticação, Autorização e Gestão de Tokens OAuth2)
+  # 3. Keycloak
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
     container_name: hospital-keycloak
@@ -46,20 +45,20 @@ services:
     networks:
       - hospital-net
 
-  # 4. RabbitMQ (Comunicação Assíncrona entre Serviços)
+  # 4. RabbitMQ
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
     container_name: hospital-rabbitmq
     ports:
       - "5672:5672"
-      - "15672:15672" # Painel gerencial
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     networks:
       - hospital-net
 
-# 5. Loki (Agregador de Logs - Open Source)
+  # 5. Loki
   loki:
     image: grafana/loki:3.0.0
     container_name: hospital-loki
@@ -69,7 +68,7 @@ services:
     networks:
       - hospital-net
 
-  # 6. Grafana (Painel Visual de Observabilidade - Gratuito)
+  # 6. Grafana
   grafana:
     image: grafana/grafana:10.4.0
     container_name: hospital-grafana
