@@ -87,7 +87,7 @@
       "name": "hospital-patient-service",
       "item": [
         {
-          "name": "createPatient",
+          "name": "register",
           "request": {
             "method": "POST",
             "header": [
@@ -98,112 +98,24 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Eber Silva\",\n  \"email\": \"eber.silva@email.com\",\n  \"cpf\": \"123.456.789-00\",\n  \"phone\": \"+5511999999999\",\n  \"birth_date\": \"1980-05-15\"\n}",
+              "raw": "{\n  \"name\": \"Carlos Alberto\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"carlos.alberto@email.com\",\n  \"birthDate\": \"1985-10-20\"\n}",
               "options": {
                 "raw": {
-                  "language": "text"
+                  "language": "json"
                 }
               }
             },
             "url": {
-              "raw": "{{baseUrl}}:8082/patient-service/patients",
+              "raw": "{{baseUrl}}:8082/patient-service/api/v1/patients",
               "host": [
                 "{{baseUrl}}"
               ],
               "port": "8082",
               "path": [
                 "patient-service",
+                "api",
+                "v1",
                 "patients"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "getAllPatients",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}:8082/patient-service/patients",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "port": "8082",
-              "path": [
-                "patient-service",
-                "patients"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "getPatientById",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}:8082/patient-service/patients/{id}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "port": "8082",
-              "path": [
-                "patient-service",
-                "patients",
-                "{id}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "updatePatient",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Eber Silva Atualizado\",\n  \"email\": \"eber.atualizado@email.com\",\n  \"phone\": \"+5511888888888\"\n}",
-              "options": {
-                "raw": {
-                  "language": "text"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}:8082/patient-service/patients/{id}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "port": "8082",
-              "path": [
-                "patient-service",
-                "patients",
-                "{id}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "deletePatient",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": ":{{baseUrl}}8082/patient-service/patients/{id}",
-              "port": "{{baseUrl}}8082",
-              "path": [
-                "patient-service",
-                "patients",
-                "{id}"
               ]
             }
           },
