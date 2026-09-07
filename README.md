@@ -1,6 +1,6 @@
 # hospital-infrastructure
 
-Vai centralizar o Docker Compose com Consul, Keycloak, Postgres, RabbitMQ e Splunk
+Vai centralizar o Docker Compose com Consul, Keycloak, Postgres, RabbitMQ e Grafa com loki
 
 
 
@@ -34,7 +34,7 @@ O projeto adota uma arquitetura distribuída baseada em \*\*Microsserviços\*\*,
 
 \* \*\*GraphQL\*\* (Consultas flexíveis para histórico de pacientes)
 
-\* \*\*Splunk\*\* (Centralização e padronização de logs)
+\* \*\*Grafana + Loki\*\* (Visualização e centralização de logs)
 
 \* \*\*Docker \& Docker Compose\*\* (Containerização total do ambiente)
 
@@ -48,5 +48,5 @@ O projeto adota uma arquitetura distribuída baseada em \*\*Microsserviços\*\*,
 
 
 
-\* \*\*Passo 1:\*\* Configuração da infraestrutura base via Docker Compose (`hospital-infrastructure`) contendo Consul, PostgreSQL, Keycloak, RabbitMQ e Splunk.
+\* \*\*Passo 1:\*\* Configuração da infraestrutura base via Docker Compose (`hospital-infrastructure`) contendo Consul, PostgreSQL, Keycloak, RabbitMQ, Grafana e Loki.
 

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # 1. HashiCorp Consul (Service Discovery)
   consul:
@@ -23,6 +21,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
     networks:
       - hospital-net
 
@@ -37,9 +36,12 @@ services:
       KC_DB_PASSWORD: adminpassword
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: 192.168.137.2
     ports:
       - "8080:8080"
-    command: ["start-dev"]
+    volumes:
+      - ./keycloak/realm-hospital.json:/opt/keycloak/data/import/realm-hospital.json:ro
+    command: ["start-dev", "--import-realm"]
     depends_on:
       - postgres
     networks:

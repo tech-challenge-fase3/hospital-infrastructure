@@ -1,0 +1,108 @@
+{
+  "realm": "hospital",
+  "enabled": true,
+  "displayName": "Hospital",
+  "roles": {
+    "realm": [
+      {
+        "name": "DOCTOR",
+        "description": "Pode visualizar e editar consultas e historico"
+      },
+      {
+        "name": "NURSE",
+        "description": "Pode registrar consultas e acessar historico"
+      },
+      {
+        "name": "PATIENT",
+        "description": "Pode visualizar as proprias consultas"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "hospital-api",
+      "name": "Hospital API",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [],
+      "webOrigins": []
+      ,"protocolMappers": [
+        {
+          "name": "patient-id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "patientId",
+            "claim.name": "patientId",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "doctor.test",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "doctor.test@hospital.local",
+      "requiredActions": [],
+      "firstName": "Doctor",
+      "lastName": "Test",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Hospital@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["DOCTOR"]
+    },
+    {
+      "username": "nurse.test",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "nurse.test@hospital.local",
+      "requiredActions": [],
+      "firstName": "Nurse",
+      "lastName": "Test",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Hospital@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["NURSE"]
+    },
+    {
+      "username": "patient.test",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "patient.test@hospital.local",
+      "firstName": "Patient",
+      "lastName": "Test",
+      "attributes": {
+        "patientId": ["123e4567-e89b-12d3-a456-426614174000"]
+      },
+      "requiredActions": [],
+      "firstName": "Patient",
+      "lastName": "Test",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Hospital@123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["PATIENT"]
+    }
+  ]
+}
