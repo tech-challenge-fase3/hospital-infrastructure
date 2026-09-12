@@ -1,0 +1,516 @@
+{
+  "info": {
+    "_postman_id": "851ea16f-a3a2-4174-b690-0f0e2494aac1",
+    "name": "Tech-Challenge - Fase-3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1598189"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost"
+    },
+    {
+      "key": "keycloakUrl",
+      "value": "http://192.168.137.2:8080"
+    },
+    {
+      "key": "realm",
+      "value": "hospital"
+    },
+    {
+      "key": "appointmentId",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "key": "patientToken",
+      "value": ""
+    },
+    {
+      "key": "doctorToken",
+      "value": ""
+    },
+    {
+      "key": "nurseToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "hospital-scheduling-service",
+      "item": [
+        {
+          "name": "createAppointment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"doctorId\": \"987fcdeb-512a-43f7-b234-987654321000\",\n  \"appointmentDate\": \"2026-09-15T14:30:00\",\n  \"notes\": \"Consulta de rotina com cardiologista\"\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{doctorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8081/scheduling-service/api/v1/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8081",
+              "path": [
+                "scheduling-service",
+                "api",
+                "v1",
+                "appointments"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.collectionVariables.set('appointmentId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": \"ebd82d45-380f-4a04-bd47-7f76bd63087f\",\n  \"patientId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"doctorId\": \"987fcdeb-512a-43f7-b234-987654321000\",\n  \"appointmentDate\": \"2026-09-10T14:30:00\",\n  \"status\": \"SCHEDULED\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"O ID do paciente é obrigatório\"\n}"
+            },
+            {
+              "name": "409 Conflict",
+              "status": "Conflict",
+              "code": 409,
+              "body": "{\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"message\": \"O médico já possui um agendamento nesse intervalo\",\n  \"suggestedAppointmentDate\": \"2026-09-10T15:00:00\"\n}"
+            },
+            {
+              "name": "500 Internal Server Error",
+              "status": "Internal Server Error",
+              "code": 500,
+              "body": "{\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n  \"message\": \"Erro inesperado ao processar a solicitação\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "getAllAppointments",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8081/scheduling-service/api/v1/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8081",
+              "path": [
+                "scheduling-service",
+                "api",
+                "v1",
+                "appointments"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "[]"
+            },
+            {
+              "name": "500 Internal Server Error",
+              "status": "Internal Server Error",
+              "code": 500,
+              "body": "{\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n  \"message\": \"Erro inesperado ao processar a solicitação\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "getAppointmentById",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}:8081/scheduling-service/api/v1/appointments/{{appointmentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8081",
+              "path": [
+                "scheduling-service",
+                "api",
+                "v1",
+                "appointments",
+                "{{appointmentId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": \"ebd82d45-380f-4a04-bd47-7f76bd63087f\",\n  \"patientId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"doctorId\": \"987fcdeb-512a-43f7-b234-987654321000\",\n  \"appointmentDate\": \"2026-09-10T14:30:00\",\n  \"status\": \"SCHEDULED\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"ID informado em formato inválido\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"status\": 404,\n  \"error\": \"Not Found\",\n  \"message\": \"Agendamento não encontrado para o ID informado\"\n}"
+            },
+            {
+              "name": "500 Internal Server Error",
+              "status": "Internal Server Error",
+              "code": 500,
+              "body": "{\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n  \"message\": \"Erro inesperado ao processar a solicitação\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "updateAppointment",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{doctorToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointmentDate\": \"2026-09-16T15:30:00\",\n  \"notes\": \"Consulta reagendada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8081/scheduling-service/api/v1/appointments/{{appointmentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8081",
+              "path": [
+                "scheduling-service",
+                "api",
+                "v1",
+                "appointments",
+                "{{appointmentId}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": \"00000000-0000-0000-0000-000000000000\",\n  \"appointmentDate\": \"2026-09-10T15:30:00\",\n  \"status\": \"SCHEDULED\",\n  \"notes\": \"Consulta reagendada\",\n  \"updatedAt\": \"2026-09-07T21:40:00.000\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"A data da consulta é obrigatória\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "body": "{\n  \"status\": 404,\n  \"error\": \"Not Found\",\n  \"message\": \"Agendamento não encontrado para o ID informado\"\n}"
+            },
+            {
+              "name": "409 Conflict",
+              "status": "Conflict",
+              "code": 409,
+              "body": "{\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"message\": \"O médico já possui um agendamento nesse intervalo\",\n  \"suggestedAppointmentDate\": \"2026-09-10T16:00:00\"\n}"
+            },
+            {
+              "name": "500 Internal Server Error",
+              "status": "Internal Server Error",
+              "code": 500,
+              "body": "{\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n  \"message\": \"Erro inesperado ao processar a solicitação\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hospital-patient-service",
+      "item": [
+        {
+          "name": "getPatientToken",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "client_id",
+                  "value": "hospital-api"
+                },
+                {
+                  "key": "username",
+                  "value": "patient.test"
+                },
+                {
+                  "key": "password",
+                  "value": "Hospital@123"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+              "host": [
+                "{{keycloakUrl}}"
+              ],
+              "path": [
+                "realms",
+                "{{realm}}",
+                "protocol",
+                "openid-connect",
+                "token"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.collectionVariables.set('patientToken', pm.response.json().access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"access_token\": \"jwt-token\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 300,\n  \"refresh_token\": \"refresh-token\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "getDoctorToken",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {"key": "grant_type", "value": "password"},
+                {"key": "client_id", "value": "hospital-api"},
+                {"key": "username", "value": "doctor.test"},
+                {"key": "password", "value": "Hospital@123"}
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+              "host": ["{{keycloakUrl}}"],
+              "path": ["realms", "{{realm}}", "protocol", "openid-connect", "token"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.collectionVariables.set('doctorToken', pm.response.json().access_token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getNurseToken",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {"key": "grant_type", "value": "password"},
+                {"key": "client_id", "value": "hospital-api"},
+                {"key": "username", "value": "nurse.test"},
+                {"key": "password", "value": "Hospital@123"}
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+              "host": ["{{keycloakUrl}}"],
+              "path": ["realms", "{{realm}}", "protocol", "openid-connect", "token"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.collectionVariables.set('nurseToken', pm.response.json().access_token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+                  "raw": "{\n  \"name\": \"Carlos Alberto\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"carlos.alberto@email.com\",\n  \"password\": \"Carlos@123\",\n  \"birthDate\": \"1985-10-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8082/patient-service/api/v1/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8082",
+              "path": [
+                "patient-service",
+                "api",
+                "v1",
+                "patients"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+                  "body": "{\n  \"id\": 1,\n  \"patientId\": \"a8f2d8e8-0dd5-4b1b-a3b6-d31d3d7e4b57\",\n  \"name\": \"Carlos Alberto\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"carlos.alberto@email.com\",\n  \"birthDate\": \"1985-10-20\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"timestamp\": \"2026-09-12T10:00:00Z\",\n  \"status\": 400,\n  \"error\": \"Bad Request\",\n  \"message\": \"O nome é obrigatório\"\n}"
+            },
+            {
+              "name": "409 Conflict",
+              "status": "Conflict",
+              "code": 409,
+              "body": "{\n  \"timestamp\": \"2026-09-12T10:00:00Z\",\n  \"status\": 409,\n  \"error\": \"Conflict\",\n  \"message\": \"Já existe um paciente cadastrado com o CPF: 12345678901\"\n}"
+            },
+            {
+              "name": "500 Internal Server Error",
+              "status": "Internal Server Error",
+              "code": 500,
+              "body": "{\n  \"timestamp\": \"2026-09-12T10:00:00Z\",\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n  \"message\": \"Erro inesperado ao processar a solicitação\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
