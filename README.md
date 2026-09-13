@@ -110,15 +110,13 @@ Clone todos os repositorios no mesmo diretorio pai. O `relativePath` do `pom.xml
 mkdir -p ~/hospital-fase3
 cd ~/hospital-fase3
 
-git clone <URL_DA_ORGANIZACAO>/hospital-parent.git
-git clone <URL_DA_ORGANIZACAO>/hospital-infrastructure.git
-git clone <URL_DA_ORGANIZACAO>/hospital-patient-service.git
-git clone <URL_DA_ORGANIZACAO>/hospital-scheduling-service.git
-git clone <URL_DA_ORGANIZACAO>/hospital-notification-service.git
-git clone <URL_DA_ORGANIZACAO>/hospital-history-service.git
+git clone https://github.com/tech-challenge-fase3/hospital-parent.git
+git clone https://github.com/tech-challenge-fase3/hospital-infrastructure.git
+git clone https://github.com/tech-challenge-fase3/hospital-patient-service.git
+git clone https://github.com/tech-challenge-fase3/hospital-scheduling-service.git
+git clone https://github.com/tech-challenge-fase3/hospital-notification-service.git
+git clone https://github.com/tech-challenge-fase3/hospital-history-service.git
 ```
-
-Substitua `<URL_DA_ORGANIZACAO>` pela URL real da organizacao entregue aos professores.
 
 ## 6. Subir a infraestrutura
 
