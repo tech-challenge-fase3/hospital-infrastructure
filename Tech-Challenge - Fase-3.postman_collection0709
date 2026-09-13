@@ -12,11 +12,15 @@
     },
     {
       "key": "keycloakUrl",
-      "value": "http://192.168.137.2:8080"
+      "value": "http://localhost:8080"
     },
     {
       "key": "realm",
       "value": "hospital"
+    },
+    {
+      "key": "patientServicePort",
+      "value": "8084"
     },
     {
       "key": "appointmentId",
@@ -32,6 +36,18 @@
     },
     {
       "key": "nurseToken",
+      "value": ""
+    },
+    {
+      "key": "patientTokenExpiresAt",
+      "value": ""
+    },
+    {
+      "key": "doctorTokenExpiresAt",
+      "value": ""
+    },
+    {
+      "key": "nurseTokenExpiresAt",
       "value": ""
     }
   ],
@@ -356,8 +372,16 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "pm.test('Keycloak respondeu com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});",
                   "if (pm.response.code === 200) {",
-                  "    pm.collectionVariables.set('patientToken', pm.response.json().access_token);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.access_token, 'access_token').to.be.a('string').and.not.empty;",
+                  "    pm.collectionVariables.set('patientToken', body.access_token);",
+                  "    const expiresAt = Date.now() + (Number(body.expires_in || 0) * 1000);",
+                  "    pm.collectionVariables.set('patientTokenExpiresAt', String(expiresAt));",
+                  "    console.log('patientToken atualizado automaticamente');",
                   "}"
                 ]
               }
@@ -403,8 +427,16 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "pm.test('Keycloak respondeu com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});",
                   "if (pm.response.code === 200) {",
-                  "    pm.collectionVariables.set('doctorToken', pm.response.json().access_token);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.access_token, 'access_token').to.be.a('string').and.not.empty;",
+                  "    pm.collectionVariables.set('doctorToken', body.access_token);",
+                  "    const expiresAt = Date.now() + (Number(body.expires_in || 0) * 1000);",
+                  "    pm.collectionVariables.set('doctorTokenExpiresAt', String(expiresAt));",
+                  "    console.log('doctorToken atualizado automaticamente');",
                   "}"
                 ]
               }
@@ -442,8 +474,16 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
+                  "pm.test('Keycloak respondeu com sucesso', function () {",
+                  "    pm.expect(pm.response.code).to.eql(200);",
+                  "});",
                   "if (pm.response.code === 200) {",
-                  "    pm.collectionVariables.set('nurseToken', pm.response.json().access_token);",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.access_token, 'access_token').to.be.a('string').and.not.empty;",
+                  "    pm.collectionVariables.set('nurseToken', body.access_token);",
+                  "    const expiresAt = Date.now() + (Number(body.expires_in || 0) * 1000);",
+                  "    pm.collectionVariables.set('nurseTokenExpiresAt', String(expiresAt));",
+                  "    console.log('nurseToken atualizado automaticamente');",
                   "}"
                 ]
               }
@@ -470,11 +510,11 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}:8082/patient-service/api/v1/patients",
+              "raw": "{{baseUrl}}:{{patientServicePort}}/patient-service/api/v1/patients",
               "host": [
                 "{{baseUrl}}"
               ],
-              "port": "8082",
+                "port": "{{patientServicePort}}",
               "path": [
                 "patient-service",
                 "api",
@@ -507,6 +547,60 @@
               "status": "Internal Server Error",
               "code": 500,
               "body": "{\n  \"timestamp\": \"2026-09-12T10:00:00Z\",\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n  \"message\": \"Erro inesperado ao processar a solicitação\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hospital-history-service",
+      "item": [
+        {
+          "name": "patientHistory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query PatientHistory($patientId: ID!) { patientHistory(patientId: $patientId) { appointmentId patientId doctorId appointmentDate status notes createdAt updatedAt } }\",\n  \"variables\": {\n    \"patientId\": \"123e4567-e89b-12d3-a456-426614174000\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}:8083/graphql",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "port": "8083",
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"data\": {\n    \"patientHistory\": []\n  }\n}"
             }
           ]
         }

@@ -1,86 +1,229 @@
 services:
   # 1. HashiCorp Consul (Service Discovery)
   consul:
-    image: hashicorp/consul:1.18.2
-    container_name: hospital-consul
-    ports:
-      - "8500:8500"
-      - "8600:8600/udp"
-    command: "agent -dev -ui -client=0.0.0.0"
-    networks:
-      - hospital-net
+      image: hashicorp/consul:1.18.2
+      container_name: hospital-consul
+      ports:
+        - "8500:8500"
+        - "8600:8600/udp"
+      command: agent -dev -ui -client=0.0.0.0
+      healthcheck:
+        test: ["CMD", "consul", "members"]
+        interval: 5s
+        timeout: 3s
+        retries: 20
+      networks:
+        - hospital-net
 
   # 2. PostgreSQL Único (Hospedando os bancos de todos os microsserviços e Keycloak)
   postgres:
-    image: postgres:16-alpine
-    container_name: hospital-postgres
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: adminpassword
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
-    networks:
-      - hospital-net
+      image: postgres:16-alpine
+      container_name: hospital-postgres
+      environment:
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: adminpassword
+      ports:
+        - "5432:5432"
+      volumes:
+        - pgdata:/var/lib/postgresql/data
+        - ./init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U admin -d postgres"]
+        interval: 5s
+        timeout: 5s
+        retries: 20
+      networks:
+        - hospital-net
 
   # 3. Keycloak
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0.1
-    container_name: hospital-keycloak
-    environment:
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
-      KC_DB_USERNAME: admin
-      KC_DB_PASSWORD: adminpassword
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HOSTNAME: 192.168.137.2
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./keycloak/realm-hospital.json:/opt/keycloak/data/import/realm-hospital.json:ro
-    command: ["start-dev", "--import-realm"]
-    depends_on:
-      - postgres
-    networks:
-      - hospital-net
+      image: quay.io/keycloak/keycloak:24.0.1
+      container_name: hospital-keycloak
+      environment:
+        KC_DB: postgres
+        KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+        KC_DB_USERNAME: admin
+        KC_DB_PASSWORD: adminpassword
+        KEYCLOAK_ADMIN: admin
+        KEYCLOAK_ADMIN_PASSWORD: admin
+        KC_HOSTNAME: localhost
+        KC_HOSTNAME_STRICT: "false"
+      ports:
+        - "8080:8080"
+      volumes:
+        - ./keycloak/realm-hospital.json:/opt/keycloak/data/import/realm-hospital.json:ro
+      command: ["start-dev", "--import-realm"]
+      depends_on:
+        postgres:
+          condition: service_healthy
+      networks:
+        - hospital-net
 
   # 4. RabbitMQ
   rabbitmq:
-    image: rabbitmq:3.13-management-alpine
-    container_name: hospital-rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    networks:
-      - hospital-net
+      image: rabbitmq:3.13-management-alpine
+      container_name: hospital-rabbitmq
+      ports:
+        - "5672:5672"
+        - "15672:15672"
+      environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+      healthcheck:
+        test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+        interval: 5s
+        timeout: 5s
+        retries: 20
+      networks:
+        - hospital-net
 
   # 5. Loki
   loki:
-    image: grafana/loki:3.0.0
-    container_name: hospital-loki
-    ports:
-      - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml
-    networks:
-      - hospital-net
+      image: grafana/loki:3.0.0
+      container_name: hospital-loki
+      ports:
+        - "3100:3100"
+      command: -config.file=/etc/loki/local-config.yaml
+      networks:
+        - hospital-net
 
   # 6. Grafana
   grafana:
-    image: grafana/grafana:10.4.0
-    container_name: hospital-grafana
+      image: grafana/grafana:10.4.0
+      container_name: hospital-grafana
+      ports:
+        - "3000:3000"
+      environment:
+        GF_SECURITY_ADMIN_USER: admin
+        GF_SECURITY_ADMIN_PASSWORD: admin
+      depends_on:
+        - loki
+      networks:
+        - hospital-net
+  scheduling-service:
+    build:
+      context: ..
+      dockerfile: hospital-scheduling-service/Dockerfile
+    container_name: hospital-scheduling-service
     ports:
-      - "3000:3000"
+      - "8081:8081"
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: hospital_db
+      DB_USER: admin
+      DB_PASSWORD: adminpassword
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+      KEYCLOAK_ISSUER_URI: http://host.docker.internal:8080/realms/hospital
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
-      - loki
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    restart: on-failure
+    networks:
+      - hospital-net
+
+  notification-service:
+    build:
+      context: ..
+      dockerfile: hospital-notification-service/Dockerfile
+    container_name: hospital-notification-service
+    ports:
+      - "8082:8082"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: hospital_notification_db
+      DB_USER: admin
+      DB_PASSWORD: adminpassword
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - hospital-net
+
+  history-service:
+    build:
+      context: ..
+      dockerfile: hospital-history-service/Dockerfile
+    container_name: hospital-history-service
+    ports:
+      - "8083:8083"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: hospital_history_db
+      DB_USER: admin
+      DB_PASSWORD: adminpassword
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - hospital-net
+
+  patient-service:
+    build:
+      context: ..
+      dockerfile: hospital-patient-service/Dockerfile
+    container_name: hospital-patient-service
+    ports:
+      - "8084:8082"
+    environment:
+      SERVER_PORT: 8082
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: hospital_patient_db
+      DB_USER: admin
+      DB_PASSWORD: adminpassword
+      KEYCLOAK_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: hospital
+      KEYCLOAK_ADMIN_USERNAME: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_CLIENT_ID: admin-cli
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+    depends_on:
+      postgres:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    restart: on-failure
     networks:
       - hospital-net
 
