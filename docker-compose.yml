@@ -1,107 +1,108 @@
 services:
   # 1. HashiCorp Consul (Service Discovery)
   consul:
-      image: hashicorp/consul:1.18.2
-      container_name: hospital-consul
-      ports:
-        - "8500:8500"
-        - "8600:8600/udp"
-      command: agent -dev -ui -client=0.0.0.0
-      healthcheck:
-        test: ["CMD", "consul", "members"]
-        interval: 5s
-        timeout: 3s
-        retries: 20
-      networks:
-        - hospital-net
+    image: hashicorp/consul:1.18.2
+    container_name: hospital-consul
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    command: agent -dev -ui -client=0.0.0.0
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - hospital-net
 
-  # 2. PostgreSQL Único (Hospedando os bancos de todos os microsserviços e Keycloak)
+  # 2. PostgreSQL
   postgres:
-      image: postgres:16-alpine
-      container_name: hospital-postgres
-      environment:
-        POSTGRES_USER: admin
-        POSTGRES_PASSWORD: adminpassword
-      ports:
-        - "5432:5432"
-      volumes:
-        - pgdata:/var/lib/postgresql/data
-        - ./init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
-      healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U admin -d postgres"]
-        interval: 5s
-        timeout: 5s
-        retries: 20
-      networks:
-        - hospital-net
+    image: postgres:16-alpine
+    container_name: hospital-postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - hospital-net
 
   # 3. Keycloak
   keycloak:
-      image: quay.io/keycloak/keycloak:24.0.1
-      container_name: hospital-keycloak
-      environment:
-        KC_DB: postgres
-        KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
-        KC_DB_USERNAME: admin
-        KC_DB_PASSWORD: adminpassword
-        KEYCLOAK_ADMIN: admin
-        KEYCLOAK_ADMIN_PASSWORD: admin
-        KC_HOSTNAME: localhost
-        KC_HOSTNAME_STRICT: "false"
-      ports:
-        - "8080:8080"
-      volumes:
-        - ./keycloak/realm-hospital.json:/opt/keycloak/data/import/realm-hospital.json:ro
-      command: ["start-dev", "--import-realm"]
-      depends_on:
-        postgres:
-          condition: service_healthy
-      networks:
-        - hospital-net
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: hospital-keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: adminpassword
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_STRICT: "false"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak/realm-hospital.json:/opt/keycloak/data/import/realm-hospital.json:ro
+    command: ["start-dev", "--import-realm"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hospital-net
 
   # 4. RabbitMQ
   rabbitmq:
-      image: rabbitmq:3.13-management-alpine
-      container_name: hospital-rabbitmq
-      ports:
-        - "5672:5672"
-        - "15672:15672"
-      environment:
-        RABBITMQ_DEFAULT_USER: guest
-        RABBITMQ_DEFAULT_PASS: guest
-        volumes:
-          - rabbitmq_data:/var/lib/rabbitmq
-      healthcheck:
-        test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-        interval: 5s
-        timeout: 5s
-        retries: 20
-      networks:
-        - hospital-net
+    image: rabbitmq:3.13-management-alpine
+    container_name: hospital-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - hospital-net
 
   # 5. Loki
   loki:
-      image: grafana/loki:3.0.0
-      container_name: hospital-loki
-      ports:
-        - "3100:3100"
-      command: -config.file=/etc/loki/local-config.yaml
-      networks:
-        - hospital-net
+    image: grafana/loki:3.0.0
+    container_name: hospital-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - hospital-net
 
   # 6. Grafana
   grafana:
-      image: grafana/grafana:10.4.0
-      container_name: hospital-grafana
-      ports:
-        - "3000:3000"
-      environment:
-        GF_SECURITY_ADMIN_USER: admin
-        GF_SECURITY_ADMIN_PASSWORD: admin
-      depends_on:
-        - loki
-      networks:
-        - hospital-net
+    image: grafana/grafana:10.4.0
+    container_name: hospital-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    depends_on:
+      - loki
+    networks:
+      - hospital-net
+
   scheduling-service:
     build:
       context: ..
@@ -136,10 +137,6 @@ services:
     restart: on-failure
     networks:
       - hospital-net
-
-volumes:
-  pgdata:
-  rabbitmq_data:
 
   notification-service:
     build:
@@ -232,6 +229,10 @@ volumes:
     restart: on-failure
     networks:
       - hospital-net
+
+volumes:
+  pgdata:
+  rabbitmq_data:
 
 networks:
   hospital-net:
