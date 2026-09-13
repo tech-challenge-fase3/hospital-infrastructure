@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="tech-challenge-fase-3---sistema-hospitalar-modular">Tech Challenge Fase 3 - Sistema Hospitalar Modular</h1>
+<p>Documentacao de entrega para execucao, avaliacao e demonstracao do sistema hospitalar da Fase 3.</p>
+<p>Este e o documento unico da entrega. Todas as instrucoes necessarias para compreender, executar e avaliar os microsservicos estao reunidas aqui; os READMEs individuais dos servicos sao apenas materiais tecnicos complementares.</p>
+<h2 id="sumario">Sumario</h2>
+<ol>
+<li><a href="#1-objetivo">Objetivo</a></li>
+<li><a href="#2-arquitetura">Arquitetura</a></li>
+<li><a href="#3-tecnologias-e-padroes">Tecnologias e padroes</a></li>
+<li><a href="#4-pre-requisitos">Pre-requisitos</a></li>
+<li><a href="#5-clone-dos-repositorios">Clone dos repositorios</a></li>
+<li><a href="#6-subir-a-infraestrutura">Subir o ambiente completo</a></li>
+<li><a href="#7-iniciar-os-microsservicos-manualmente-alternativa">Execucao manual alternativa</a></li>
+<li><a href="#8-keycloak-e-usuarios-de-demonstracao">Keycloak</a></li>
+<li><a href="#9-collection-postman">Collection Postman</a></li>
+<li><a href="#10-endpoints-rest">Endpoints REST</a></li>
+<li><a href="#11-graphql-e-historico">GraphQL</a></li>
+<li><a href="#12-rabbitmq-e-comunicacao-assincrona">RabbitMQ</a></li>
+<li><a href="#13-observabilidade">Observabilidade</a></li>
+<li><a href="#14-troubleshooting">Troubleshooting</a></li>
+<li><a href="#15-repositorio-e-avaliacao">Repositorio e avaliacao</a></li>
+<li><a href="#16-checklist-de-entrega">Checklist de entrega</a></li>
+</ol>
+<h2 id="1-objetivo">1. Objetivo</h2>
+<p>O projeto implementa uma arquitetura distribuida para cadastro de pacientes, agendamento de consultas, processamento assincrono de eventos e consulta do historico de agendamentos.</p>
+<p>A entrega e composta por uma organizacao com os seguintes repositorios:</p>
+<ul>
+<li><code>hospital-parent</code>: parent Maven com versoes e configuracoes compartilhadas.</li>
+<li><code>hospital-infrastructure</code>: Docker Compose, Keycloak, banco inicial, observabilidade e esta documentacao.</li>
+<li><code>hospital-patient-service</code>: cadastro de pacientes e provisionamento de identidade no Keycloak.</li>
+<li><code>hospital-scheduling-service</code>: comandos REST de agendamento, autorizacao e publicacao de eventos.</li>
+<li><code>hospital-notification-service</code>: consumidor RabbitMQ para processamento idempotente de eventos.</li>
+<li><code>hospital-history-service</code>: projecao do historico e consultas GraphQL.</li>
+</ul>
+<p>O objetivo deste documento e permitir que a banca clone os repositorios da organizacao, suba a infraestrutura e valide o funcionamento do ecossistema sem depender do ambiente de desenvolvimento original.</p>
+<h2 id="2-arquitetura">2. Arquitetura</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    U[Postman / Cliente] --> K[Keycloak :8080]
+    U --> P[patient-service :8082]
+    U --> S[scheduling-service :8081]
+    U --> H[history-service GraphQL :8083]
+    S --> DB[(PostgreSQL)]
+    P --> DBP[(hospital_patient_db)]
+    S --> R[RabbitMQ]
+    R --> N[notification-service :8082]
+    R --> H
+    N --> DBN[(hospital_notification_db)]
+    H --> DBH[(hospital_history_db)]
+    C[Consul :8500] --- P
+    C --- S
+    C --- N
+    C --- H
+    L[Loki :3100] --- G[Grafana :3000]
+</div></code></pre>
+<h3 id="responsabilidades">Responsabilidades</h3>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Responsabilidade</th>
+<th style="text-align:right">Porta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keycloak</td>
+<td>OAuth2, JWT, usuarios e roles</td>
+<td style="text-align:right">8080</td>
+</tr>
+<tr>
+<td>patient-service</td>
+<td>Cadastro de paciente e integracao com Keycloak</td>
+<td style="text-align:right">8084 (interno: 8082)</td>
+</tr>
+<tr>
+<td>scheduling-service</td>
+<td>Criacao, consulta e atualizacao de agendamentos</td>
+<td style="text-align:right">8081</td>
+</tr>
+<tr>
+<td>notification-service</td>
+<td>Consumo de eventos e idempotencia</td>
+<td style="text-align:right">8082</td>
+</tr>
+<tr>
+<td>history-service</td>
+<td>Historico de agendamentos via GraphQL</td>
+<td style="text-align:right">8083</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Bancos isolados por microsservico</td>
+<td style="text-align:right">5432</td>
+</tr>
+<tr>
+<td>RabbitMQ</td>
+<td>Comunicacao assincrona</td>
+<td style="text-align:right">5672 / 15672</td>
+</tr>
+<tr>
+<td>Consul</td>
+<td>Service discovery e health checks</td>
+<td style="text-align:right">8500</td>
+</tr>
+<tr>
+<td>Grafana</td>
+<td>Visualizacao de logs</td>
+<td style="text-align:right">3000</td>
+</tr>
+<tr>
+<td>Loki</td>
+<td>Agregacao de logs</td>
+<td style="text-align:right">3100</td>
+</tr>
+</tbody>
+</table>
+<p>O <code>patient-service</code> e o <code>notification-service</code> usam a porta <code>8082</code> em momentos diferentes no ambiente atual? Para a demonstracao integrada, o <code>patient-service</code> deve ser executado em outra porta, por exemplo <code>8084</code>, pois o <code>notification-service</code> usa <code>8082</code>. Consulte a secao de execucao para iniciar o patient-service com <code>SERVER_PORT=8084</code>.</p>
+<h2 id="3-tecnologias-e-padroes">3. Tecnologias e padroes</h2>
+<ul>
+<li>Java 25.</li>
+<li>Spring Boot 4.1.1.</li>
+<li>Maven Wrapper em cada microsservico.</li>
+<li>Clean Architecture e separacao entre dominio, aplicacao, infraestrutura e apresentacao.</li>
+<li>PostgreSQL com Flyway.</li>
+<li>Keycloak com JWT e roles <code>PATIENT</code>, <code>DOCTOR</code> e <code>NURSE</code>.</li>
+<li>RabbitMQ com exchange <code>hospital.appointments</code>.</li>
+<li>GraphQL para leitura do historico.</li>
+<li>Consul para descoberta de servicos.</li>
+<li>Grafana e Loki para observabilidade.</li>
+</ul>
+<h2 id="4-pre-requisitos">4. Pre-requisitos</h2>
+<p>Instale na maquina da banca:</p>
+<ul>
+<li>Git.</li>
+<li>Docker e Docker Compose.</li>
+<li>Java 25.</li>
+<li>Acesso ao repositorio da organizacao.</li>
+<li>Postman, Insomnia ou cliente HTTP equivalente.</li>
+</ul>
+<p>Nao e necessario instalar Maven globalmente. Os projetos possuem <code>mvnw</code> proprio.</p>
+<h2 id="5-clone-dos-repositorios">5. Clone dos repositorios</h2>
+<p>Clone todos os repositorios no mesmo diretorio pai. O <code>relativePath</code> do <code>pom.xml</code> depende dessa estrutura:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">mkdir</span> -p ~/hospital-fase3
+<span class="hljs-built_in">cd</span> ~/hospital-fase3
+
+git <span class="hljs-built_in">clone</span> https://github.com/tech-challenge-fase3/hospital-parent.git
+git <span class="hljs-built_in">clone</span> https://github.com/tech-challenge-fase3/hospital-infrastructure.git
+git <span class="hljs-built_in">clone</span> https://github.com/tech-challenge-fase3/hospital-patient-service.git
+git <span class="hljs-built_in">clone</span> https://github.com/tech-challenge-fase3/hospital-scheduling-service.git
+git <span class="hljs-built_in">clone</span> https://github.com/tech-challenge-fase3/hospital-notification-service.git
+git <span class="hljs-built_in">clone</span> https://github.com/tech-challenge-fase3/hospital-history-service.git
+</div></code></pre>
+<h2 id="6-subir-a-infraestrutura">6. Subir a infraestrutura</h2>
+<p>Entre no repositorio de infraestrutura:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> hospital-infrastructure
+docker compose up --build -d
+</div></code></pre>
+<p>Esse comando constroi as quatro imagens dos microsservicos e cria:</p>
+<ul>
+<li>PostgreSQL;</li>
+<li>bancos <code>hospital_db</code>, <code>hospital_patient_db</code>, <code>hospital_notification_db</code>, <code>hospital_history_db</code> e <code>keycloak_db</code>;</li>
+<li>Keycloak com importacao automatica do realm;</li>
+<li>RabbitMQ com painel de administracao;</li>
+<li>Consul;</li>
+<li>Loki e Grafana.</li>
+</ul>
+<p>A ordem e controlada pelo Compose: PostgreSQL, RabbitMQ e Consul passam pelos healthchecks antes dos microsservicos serem iniciados. Os servicos Java possuem <code>restart: on-failure</code> para tolerar o tempo de bootstrap do Keycloak.</p>
+<p>Para acompanhar a subida:</p>
+<pre class="hljs"><code><div>docker compose logs -f scheduling-service notification-service history-service patient-service
+</div></code></pre>
+<p>Para parar o ambiente:</p>
+<pre class="hljs"><code><div>docker compose down
+</div></code></pre>
+<p>Verifique os containers:</p>
+<pre class="hljs"><code><div>docker compose ps
+</div></code></pre>
+<p>Aguarde o Keycloak terminar o bootstrap antes de solicitar tokens. O realm importado e <code>hospital</code>.</p>
+<h3 id="ambiente-ja-inicializado">Ambiente ja inicializado</h3>
+<p>O script <code>init-databases.sql</code> so e executado automaticamente quando o volume do PostgreSQL e criado pela primeira vez. Se uma instalacao anterior nao possuir algum banco, crie-o manualmente:</p>
+<pre class="hljs"><code><div>docker <span class="hljs-built_in">exec</span> hospital-postgres psql -U admin -d postgres -c <span class="hljs-string">&quot;CREATE DATABASE hospital_notification_db&quot;</span>
+docker <span class="hljs-built_in">exec</span> hospital-postgres psql -U admin -d postgres -c <span class="hljs-string">&quot;CREATE DATABASE hospital_history_db&quot;</span>
+</div></code></pre>
+<p>Para uma reinstalacao completamente limpa, somente quando autorizado:</p>
+<pre class="hljs"><code><div>docker compose down -v
+docker compose up --build -d
+</div></code></pre>
+<h2 id="7-iniciar-os-microsservicos-manualmente-alternativa">7. Iniciar os microsservicos manualmente (alternativa)</h2>
+<p>O fluxo oficial e o comando unico da secao anterior. A execucao manual abaixo existe apenas para desenvolvimento e diagnostico.</p>
+<h3 id="scheduling">Scheduling</h3>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> hospital-scheduling-service
+./mvnw spring-boot:run
+</div></code></pre>
+<p>URL base: <code>http://localhost:8081/scheduling-service</code></p>
+<h3 id="notification">Notification</h3>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> hospital-notification-service
+./mvnw spring-boot:run
+</div></code></pre>
+<p>Health: <code>http://localhost:8082/actuator/health</code></p>
+<h3 id="history-graphql">History GraphQL</h3>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> hospital-history-service
+./mvnw spring-boot:run
+</div></code></pre>
+<p>Health: <code>http://localhost:8083/actuator/health</code></p>
+<p>GraphQL: <code>http://localhost:8083/graphql</code></p>
+<h3 id="patient">Patient</h3>
+<p>Como o notification-service usa a porta <code>8082</code>, a imagem do patient-service e publicada no host em <code>8084</code>:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> hospital-patient-service
+SERVER_PORT=8084 ./mvnw spring-boot:run
+</div></code></pre>
+<p>URL base: <code>http://localhost:8084/patient-service</code></p>
+<p>Se o servico for executado na porta padrao <code>8082</code>, ele entrara em conflito com o notification-service. Nesse caso, use <code>SERVER_PORT=8084</code> tambem na collection.</p>
+<h3 id="configuracao-do-keycloak-para-outra-maquina">Configuracao do Keycloak para outra maquina</h3>
+<p>Os defaults foram alinhados para <code>localhost</code>. Se a banca executar os servicos em outro host, use variaveis de ambiente:</p>
+<pre class="hljs"><code><div>KEYCLOAK_ISSUER_URI=http://&lt;HOST&gt;:8080/realms/hospital ./mvnw spring-boot:run
+KEYCLOAK_SERVER_URL=http://&lt;HOST&gt;:8080 SERVER_PORT=8084 ./mvnw spring-boot:run
+</div></code></pre>
+<h2 id="8-keycloak-e-usuarios-de-demonstracao">8. Keycloak e usuarios de demonstracao</h2>
+<p>Realm: <code>hospital</code></p>
+<p>Console administrativo: <code>http://localhost:8080</code></p>
+<p>Credenciais do console:</p>
+<pre class="hljs"><code><div>usuario: admin
+senha: admin
+</div></code></pre>
+<p>Usuarios importados:</p>
+<table>
+<thead>
+<tr>
+<th>Usuario</th>
+<th>Senha</th>
+<th>Role</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>patient.test</code></td>
+<td><code>Hospital@123</code></td>
+<td><code>PATIENT</code></td>
+<td>Consultar os proprios agendamentos</td>
+</tr>
+<tr>
+<td><code>doctor.test</code></td>
+<td><code>Hospital@123</code></td>
+<td><code>DOCTOR</code></td>
+<td>Criar, consultar e atualizar agendamentos</td>
+</tr>
+<tr>
+<td><code>nurse.test</code></td>
+<td><code>Hospital@123</code></td>
+<td><code>NURSE</code></td>
+<td>Criar, consultar e atualizar agendamentos</td>
+</tr>
+</tbody>
+</table>
+<p>O usuario paciente possui o atributo <code>patientId</code>:</p>
+<pre class="hljs"><code><div>123e4567-e89b-12d3-a456-426614174000
+</div></code></pre>
+<p>Esse atributo e transformado em claim <code>patientId</code> no access token pelo Protocol Mapper do realm.</p>
+<h2 id="9-collection-postman">9. Collection Postman</h2>
+<p>Arquivo entregue:</p>
+<pre class="hljs"><code><div>Tech-Challenge - Fase-3.postman_collection0709
+</div></code></pre>
+<p>Importe esse arquivo no Postman. As variaveis principais sao:</p>
+<table>
+<thead>
+<tr>
+<th>Variavel</th>
+<th>Valor inicial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>baseUrl</code></td>
+<td><code>http://localhost</code></td>
+</tr>
+<tr>
+<td><code>keycloakUrl</code></td>
+<td><code>http://localhost:8080</code></td>
+</tr>
+<tr>
+<td><code>realm</code></td>
+<td><code>hospital</code></td>
+</tr>
+<tr>
+<td><code>patientServicePort</code></td>
+<td><code>8084</code>, se configurada no ambiente</td>
+</tr>
+<tr>
+<td><code>patientToken</code></td>
+<td>preenchida automaticamente</td>
+</tr>
+<tr>
+<td><code>doctorToken</code></td>
+<td>preenchida automaticamente</td>
+</tr>
+<tr>
+<td><code>nurseToken</code></td>
+<td>preenchida automaticamente</td>
+</tr>
+<tr>
+<td><code>appointmentId</code></td>
+<td>preenchida automaticamente apos o POST</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gerar-tokens">Gerar tokens</h3>
+<p>Execute na pasta <code>hospital-patient-service</code> da collection:</p>
+<ol>
+<li><code>getPatientToken</code>;</li>
+<li><code>getDoctorToken</code>;</li>
+<li><code>getNurseToken</code>.</li>
+</ol>
+<p>Cada request possui um script de teste que:</p>
+<ul>
+<li>valida HTTP <code>200</code>;</li>
+<li>le <code>access_token</code> da resposta do Keycloak;</li>
+<li>salva o valor em uma variavel da collection;</li>
+<li>calcula e salva o vencimento em <code>patientTokenExpiresAt</code>, <code>doctorTokenExpiresAt</code> ou <code>nurseTokenExpiresAt</code>;</li>
+<li>informa no console qual token foi atualizado.</li>
+</ul>
+<p>Nao copie tokens manualmente para os requests protegidos. Eles usam automaticamente:</p>
+<pre class="hljs"><code><div>{{patientToken}}
+{{doctorToken}}
+{{nurseToken}}
+</div></code></pre>
+<p>O procedimento da banca e apenas executar os tres requests de token. O JavaScript da aba <strong>Tests</strong> de cada request faz a captura e a persistencia das variaveis; os requests de agendamento ja referenciam essas variaveis no campo Bearer Token.</p>
+<h3 id="ordem-recomendada-de-demonstracao">Ordem recomendada de demonstracao</h3>
+<ol>
+<li><code>getPatientToken</code>.</li>
+<li><code>getDoctorToken</code>.</li>
+<li><code>getNurseToken</code>.</li>
+<li><code>createAppointment</code> com <code>doctorToken</code>.</li>
+<li><code>getAllAppointments</code> com <code>patientToken</code>.</li>
+<li><code>getAppointmentById</code> com <code>patientToken</code>.</li>
+<li><code>updateAppointment</code> com <code>doctorToken</code>.</li>
+<li><code>patientHistory</code> no grupo <code>hospital-history-service</code>.</li>
+</ol>
+<p>O request de criacao salva automaticamente o ID retornado em <code>appointmentId</code>.</p>
+<h3 id="regras-de-autorizacao-demonstraveis">Regras de autorizacao demonstraveis</h3>
+<ul>
+<li>Paciente pode consultar seus agendamentos.</li>
+<li>Paciente nao pode criar agendamento: retorna <code>403</code> com mensagem explicativa.</li>
+<li>Medico e enfermeiro podem criar e atualizar agendamentos.</li>
+<li>Paciente tentando consultar agendamento de outro paciente recebe <code>404</code>, sem revelar dados de terceiros.</li>
+<li>Token ausente, invalido ou expirado retorna <code>401</code> em JSON.</li>
+</ul>
+<h2 id="10-endpoints-rest">10. Endpoints REST</h2>
+<h3 id="patient-service">Patient Service</h3>
+<pre class="hljs"><code><div>POST http://localhost:8084/patient-service/api/v1/patients
+<span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/json
+</div></code></pre>
+<p>Exemplo:</p>
+<pre class="hljs"><code><div><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Carlos Alberto&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;cpf&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;12345678901&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;email&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;carlos.alberto@email.com&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;password&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Carlos@123&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;birthDate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1985-10-20&quot;</span>
+<span class="hljs-punctuation">}</span>
+</div></code></pre>
+<p>Swagger, quando habilitado no servico:</p>
+<pre class="hljs"><code><div>http://localhost:8084/patient-service/swagger-ui.html
+</div></code></pre>
+<h3 id="scheduling-service">Scheduling Service</h3>
+<pre class="hljs"><code><div>POST /scheduling-service/api/v1/appointments
+GET  /scheduling-service/api/v1/appointments
+GET  /scheduling-service/api/v1/appointments/{id}
+PUT  /scheduling-service/api/v1/appointments/{id}
+</div></code></pre>
+<p>Criacao:</p>
+<pre class="hljs"><code><div><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;patientId&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;123e4567-e89b-12d3-a456-426614174000&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;doctorId&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;987fcdeb-512a-43f7-b234-987654321000&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;appointmentDate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2026-12-15T14:30:00&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;notes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Consulta de rotina&quot;</span>
+<span class="hljs-punctuation">}</span>
+</div></code></pre>
+<p>Respostas importantes:</p>
+<ul>
+<li><code>201 Created</code>: agendamento criado.</li>
+<li><code>400 Bad Request</code>: dados invalidos.</li>
+<li><code>401 Unauthorized</code>: token ausente, invalido ou expirado.</li>
+<li><code>403 Forbidden</code>: role sem permissao.</li>
+<li><code>404 Not Found</code>: agendamento inexistente ou indisponivel para o paciente.</li>
+<li><code>409 Conflict</code>: conflito de horario ou integridade.</li>
+</ul>
+<h2 id="11-graphql-e-historico">11. GraphQL e historico</h2>
+<p>Endpoint:</p>
+<pre class="hljs"><code><div>POST http://localhost:8083/graphql
+</div></code></pre>
+<p>Exemplo para o paciente:</p>
+<pre class="hljs"><code><div><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;query&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;query PatientHistory($patientId: ID!) { patientHistory(patientId: $patientId) { appointmentId patientId doctorId appointmentDate status notes createdAt updatedAt } }&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;variables&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;patientId&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;123e4567-e89b-12d3-a456-426614174000&quot;</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</div></code></pre>
+<p>Consultas disponibilizadas:</p>
+<ul>
+<li><code>patientHistory(patientId)</code>;</li>
+<li><code>appointmentsByPatient(patientId)</code>;</li>
+<li><code>appointmentsByDoctor(doctorId)</code>.</li>
+</ul>
+<p>O history-service recebe os eventos por filas proprias e cria uma projecao local. Ele nao acessa diretamente o banco do scheduling-service.</p>
+<h2 id="12-rabbitmq-e-comunicacao-assincrona">12. RabbitMQ e comunicacao assincrona</h2>
+<p>Exchange:</p>
+<pre class="hljs"><code><div>hospital.appointments
+</div></code></pre>
+<p>Eventos:</p>
+<pre class="hljs"><code><div>appointment.created
+appointment.updated
+</div></code></pre>
+<p>Filas do notification-service:</p>
+<pre class="hljs"><code><div>hospital.appointments.created
+hospital.appointments.updated
+</div></code></pre>
+<p>Filas do history-service:</p>
+<pre class="hljs"><code><div>hospital.history.appointments.created
+hospital.history.appointments.updated
+</div></code></pre>
+<p>O scheduling-service publica o evento somente depois de persistir o agendamento. Os eventos carregam <code>eventId</code>, <code>eventType</code>, <code>appointmentId</code> e os dados do agendamento.</p>
+<p>O notification-service usa ACK manual, idempotencia por <code>eventId</code>, retry para falhas transitorias e controle de eventos antigos por <code>updatedAt</code>. O history-service usa filas separadas para manter sua propria projecao de leitura.</p>
+<p>Painel RabbitMQ:</p>
+<pre class="hljs"><code><div>http://localhost:15672
+usuario: guest
+senha: guest
+</div></code></pre>
+<h2 id="13-observabilidade">13. Observabilidade</h2>
+<p>Consul:</p>
+<pre class="hljs"><code><div>http://localhost:8500
+</div></code></pre>
+<p>Grafana:</p>
+<pre class="hljs"><code><div>http://localhost:3000
+usuario: admin
+senha: admin
+</div></code></pre>
+<p>Loki:</p>
+<pre class="hljs"><code><div>http://localhost:3100
+</div></code></pre>
+<p>Os servicos registram seus nomes no Consul:</p>
+<ul>
+<li><code>hospital-patient-service</code>;</li>
+<li><code>scheduling-service</code>;</li>
+<li><code>notification-service</code>;</li>
+<li><code>history-service</code>.</li>
+</ul>
+<h2 id="14-troubleshooting">14. Troubleshooting</h2>
+<h3 id="porta-ocupada">Porta ocupada</h3>
+<pre class="hljs"><code><div>lsof -i :8081
+lsof -i :8082
+lsof -i :8083
+</div></code></pre>
+<p>Finalize somente o processo identificado:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">kill</span> &lt;PID&gt;
+</div></code></pre>
+<h3 id="maven-nao-encontrado-no-path">Maven nao encontrado no PATH</h3>
+<p>Use o wrapper do proprio projeto:</p>
+<pre class="hljs"><code><div>./mvnw -DskipTests clean compile
+</div></code></pre>
+<h3 id="keycloak-ainda-nao-responde">Keycloak ainda nao responde</h3>
+<p>Confira os logs:</p>
+<pre class="hljs"><code><div>docker logs -f hospital-keycloak
+</div></code></pre>
+<p>Aguarde o realm ser importado e tente novamente o request de token.</p>
+<h3 id="banco-ausente">Banco ausente</h3>
+<p>Confira os bancos:</p>
+<pre class="hljs"><code><div>docker <span class="hljs-built_in">exec</span> hospital-postgres psql -U admin -d postgres -c <span class="hljs-string">&quot;\\l&quot;</span>
+</div></code></pre>
+<p>Crie o banco faltante e reinicie o servico para o Flyway aplicar as migrations.</p>
+<h3 id="rabbitmq-sem-mensagens">RabbitMQ sem mensagens</h3>
+<p>Confira o painel em <code>http://localhost:15672</code> e valide se o scheduling publicou o evento depois de um <code>201 Created</code>.</p>
+<h2 id="15-repositorio-e-avaliacao">15. Repositorio e avaliacao</h2>
+<p>O repositorio da organizacao deve conter os seis repositorios listados na secao 1. A banca pode revisar:</p>
+<ul>
+<li>separacao de responsabilidades entre microsservicos;</li>
+<li>uso de Keycloak e roles;</li>
+<li>isolamento de bancos;</li>
+<li>persistencia versionada por Flyway;</li>
+<li>comunicacao assincrona por RabbitMQ;</li>
+<li>idempotencia e ACK manual;</li>
+<li>consulta GraphQL do historico;</li>
+<li>collection Postman com tokens automatizados;</li>
+<li>documentacao de execucao;</li>
+<li>observabilidade por Consul, Grafana e Loki.</li>
+</ul>
+<h2 id="16-checklist-de-entrega">16. Checklist de entrega</h2>
+<ul>
+<li><input type="checkbox" id="checkbox0"><label for="checkbox0">Todos os repositorios da organizacao estao acessiveis para a banca.</label></li>
+<li><input type="checkbox" id="checkbox1"><label for="checkbox1">O arquivo <code>docker-compose.yml</code> esta no repositorio de infraestrutura.</label></li>
+<li><input type="checkbox" id="checkbox2"><label for="checkbox2">O realm <code>realm-hospital.json</code> esta versionado.</label></li>
+<li><input type="checkbox" id="checkbox3"><label for="checkbox3">A collection Postman esta versionada.</label></li>
+<li><input type="checkbox" id="checkbox4"><label for="checkbox4">Os scripts de token salvam automaticamente as variaveis.</label></li>
+<li><input type="checkbox" id="checkbox5"><label for="checkbox5">O README da infraestrutura esta versionado.</label></li>
+<li><input type="checkbox" id="checkbox6"><label for="checkbox6">Os cinco bancos sao criados em instalacao limpa.</label></li>
+<li><input type="checkbox" id="checkbox7"><label for="checkbox7"><code>docker compose up --build -d</code> constroi e inicia os quatro microsservicos.</label></li>
+<li><input type="checkbox" id="checkbox8"><label for="checkbox8">Os servicos tambem podem ser compilados individualmente com Maven Wrapper.</label></li>
+<li><input type="checkbox" id="checkbox9"><label for="checkbox9">A banca consegue reproduzir o fluxo REST, RabbitMQ e GraphQL.</label></li>
+</ul>
+
+</body>
+</html>
